@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+    node:
+        container_name: node
+        image: "node:lts-alpine"
+        user: "node"
+        working_dir: /home/node/app
+        environment:
+            - NODE_ENV=developement
+        volumes:
+            - ./:/home/node/app
+        ports:
+            - "3000:3000"
+            - "4200:4200"
+        command: >
+            sh -c "yarn install
+            && yarn start"
+        networks:
+            - dev-vendure
+
+    database:
+        image: postgres:latest
+        environment:
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: testdb
+        ports:
+            - "15433:5432"
+        networks:
+            - dev-vendure
+        volumes:
+            - data-verdure:/var/lib/postgresql/data
+
+volumes:
+    data-verdure:
+
+networks:
+    dev-vendure:
+
